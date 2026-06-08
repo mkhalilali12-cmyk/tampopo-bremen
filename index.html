@@ -27,7 +27,8 @@
     --shadow-coral:0 22px 60px -28px rgba(236,122,95,.45), 0 8px 24px -16px rgba(0,0,0,.7);
     --sp-section:clamp(5rem, 9vw, 9rem); --gutter:clamp(1.25rem, 5vw, 4.5rem);
   }
-  *{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  *{ -webkit-font-smoothing:subpixel-antialiased; }
+  body{ text-rendering:optimizeLegibility; }
   html{ scroll-behavior:smooth; }
   body{ margin:0; background:var(--ink); color:var(--text); font-family:'Zen Kaku Gothic New', system-ui, sans-serif; line-height:1.7; overflow-x:hidden; }
   :lang(zh){ font-family:'Noto Sans SC','Zen Kaku Gothic New',system-ui,sans-serif; }
