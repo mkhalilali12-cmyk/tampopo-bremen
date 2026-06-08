@@ -67,7 +67,7 @@
   /* buttons */
   .btn{ position:relative; display:inline-flex; align-items:center; gap:.6rem; padding:.92rem 1.6rem; border-radius:999px;
     font-weight:700; font-size:.92rem; letter-spacing:.01em; cursor:pointer; border:1px solid transparent; text-decoration:none;
-    transition:transform .4s cubic-bezier(.2,.9,.25,1.2), box-shadow .4s ease, background-color .35s ease, color .35s ease, border-color .35s ease; will-change:transform; }
+    transition:transform .4s cubic-bezier(.2,.9,.25,1.2), box-shadow .4s ease, background-color .35s ease, color .35s ease, border-color .35s ease; }
   .btn:focus-visible{ outline:2px solid var(--coral); outline-offset:3px; }
   .btn-primary{ background:var(--coral); color:#1c0e09; box-shadow:var(--shadow-coral); }
   .btn-primary:hover{ transform:translateY(-3px); background:#f08a71; box-shadow:0 30px 70px -26px rgba(236,122,95,.7); }
@@ -148,7 +148,7 @@
   .hero-veil::after{ content:""; position:absolute; inset:0; background:radial-gradient(120% 90% at 85% 12%, rgba(255,59,48,.16), transparent 55%); mix-blend-mode:screen; }
 
   /* reveal */
-  .reveal{ opacity:0; transform:translateY(22px) scale(.985); transition:opacity .85s cubic-bezier(.22,.61,.36,1), transform .95s cubic-bezier(.2,.85,.25,1); will-change:opacity, transform; }
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .85s cubic-bezier(.22,.61,.36,1), transform .9s cubic-bezier(.2,.85,.25,1); }
   .reveal.in{ opacity:1; transform:none; }
   .reveal[data-d="1"]{ transition-delay:.07s } .reveal[data-d="2"]{ transition-delay:.14s }
   .reveal[data-d="3"]{ transition-delay:.21s } .reveal[data-d="4"]{ transition-delay:.28s } .reveal[data-d="5"]{ transition-delay:.35s }
@@ -781,6 +781,17 @@
     entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold:.14, rootMargin:'0px 0px -8% 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ---------- settle animations so text regains crisp sub-pixel anti-aliasing ---------- */
+  // A finished CSS animation/transform can leave an element on a GPU layer, which
+  // disables sub-pixel text smoothing and leaves jagged edges. Clear it once motion ends.
+  document.querySelectorAll('.rise').forEach(el => {
+    el.addEventListener('animationend', () => { el.style.animation = 'none'; el.style.opacity = '1'; el.style.transform = 'none'; }, { once:true });
+  });
+  document.addEventListener('transitionend', (e) => {
+    const t = e.target;
+    if (t.classList && t.classList.contains('reveal')) t.style.transform = 'none';
+  }, true);
 
   /* ---------- hero slideshow ---------- */
   const slides = [...document.querySelectorAll('.hero-slide')];
